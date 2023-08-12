@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:movie/screens/splash/splash.dart';
+import 'package:movie/routes/navigator.dart';
 
 void main() {
-  runApp(const SplashScreen());
+  runApp(const MyApp());
 }
