@@ -9,9 +9,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {
-        Routes.SplashScreen: (context) => const SplashScreen(),
+        Routes.SPLASH_SCREEN: (context) => const SplashScreen(),
       },
-      initialRoute: Routes.SplashScreen,
+      initialRoute: Routes.SPLASH_SCREEN,
     );
   }
 }

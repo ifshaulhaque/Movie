@@ -1,3 +1,3 @@
 class Routes {
-  static String SplashScreen = '/splash';
+  static const String SPLASH_SCREEN = '/splash';
 }
