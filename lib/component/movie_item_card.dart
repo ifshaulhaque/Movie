@@ -1,18 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:movie/screens/movies/model/movie_model.dart';
 
 class MovieItemCard extends StatelessWidget {
-  String posterUrl;
-  String title;
-  String language;
-  double rating;
-  String overview;
-  MovieItemCard(
-      {super.key,
-      required this.posterUrl,
-      required this.title,
-      required this.language,
-      required this.rating,
-      required this.overview});
+  MovieModel movieModel;
+  MovieItemCard({
+    super.key,
+    required this.movieModel
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +24,7 @@ class MovieItemCard extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: Image(
-                  image: NetworkImage(posterUrl),
+                  image: NetworkImage(movieModel.posterUrl),
                   height: 75,
                   width: 75,
                   fit: BoxFit.cover,
@@ -45,7 +39,7 @@ class MovieItemCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
-                      title,
+                      movieModel.title,
                       maxLines: 1,
                       textAlign: TextAlign.justify,
                       style: const TextStyle(
@@ -58,14 +52,14 @@ class MovieItemCard extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            language,
+                            movieModel.language,
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
                         Text(
-                          '$rating / 10',
+                          '${movieModel.rating} / 10',
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
@@ -73,7 +67,7 @@ class MovieItemCard extends StatelessWidget {
                       ],
                     ),
                     Text(
-                      overview,
+                      movieModel.overview,
                       maxLines: 2,
                       textAlign: TextAlign.justify,
                       overflow: TextOverflow.ellipsis,
