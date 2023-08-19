@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:movie/component/edit_text.dart';
+import 'package:movie/routes/routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
   static const String LOGIN_ID = "LOGIN_ID";
   static const String LOGIN_PASSWORD = "LOGIN_PASSWORD";
+  static const String IS_LOGGED_IN = "IS_LOGGED_IN";
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -40,7 +42,8 @@ class _LoginScreenState extends State<LoginScreen> {
         String? emailId = prefs.getString(LoginScreen.LOGIN_ID);
         String? password = prefs.getString(LoginScreen.LOGIN_PASSWORD);
         if (this.emailId == emailId && this.password == password) {
-
+          prefs.setBool(LoginScreen.IS_LOGGED_IN, true);
+          Navigator.pushReplacementNamed(context, Routes.MOVIE_LIST_SCREEN);
         }
       } else {
         prefs.setString(LoginScreen.LOGIN_ID, emailId!);

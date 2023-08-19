@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {
-        Routes.SPLASH_SCREEN: (context) => const SplashScreen(),
+        Routes.SPLASH_SCREEN: (context) => SplashScreen(),
         Routes.LOGIN_SCREEN: (context) => const LoginScreen(),
         Routes.MOVIE_LIST_SCREEN: (context) => const MovieListScreen(),
       },
