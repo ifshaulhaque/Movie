@@ -5,9 +5,14 @@ import 'package:movie/screens/movies/model/movie_model.dart';
 class MovieApi {
   Api api = Api();
 
-  Future<List<MovieModel>> getMovieList() async {
+  Future<List<MovieModel>> getMovieList(int pageNo) async {
+    Map<String, dynamic> query = {};
+    query['page'] = pageNo;
+
     Response response = await api.get(
-        "https://api.themoviedb.org/3/trending/movie/week?api_key=ec0ff5c611f1d0751fc6484391b1067c");
+        "https://api.themoviedb.org/3/movie/popular",
+        queryParameters: query
+    );
 
     List<MovieModel> movieData = [];
     if (response.statusCode == 200) {

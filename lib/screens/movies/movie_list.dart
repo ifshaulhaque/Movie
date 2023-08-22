@@ -3,46 +3,63 @@ import 'package:movie/component/movie_item_card.dart';
 import 'package:movie/screens/movies/model/movie_api.dart';
 import 'package:movie/screens/movies/model/movie_model.dart';
 
-class MovieListScreen extends StatelessWidget {
-  const MovieListScreen({super.key});
+class MovieListScreen extends StatefulWidget {
+  MovieListScreen({super.key});
+  ScrollController scrollController = ScrollController();
+  int pageNo = 1;
+  List<MovieItemCard> movieItemCard = [];
+
+  @override
+  State<MovieListScreen> createState() => _MovieListScreenState();
+}
+
+class _MovieListScreenState extends State<MovieListScreen> {
+  @override
+  void initState() {
+    widget.scrollController.addListener(() {
+      if (widget.scrollController.position.atEdge && widget.scrollController.position.pixels != 0) {
+        widget.pageNo++;
+        getMovieItemListWidget();
+      }
+    });
+    getMovieItemListWidget();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    Widget widgets = widget.movieItemCard.isEmpty ?
+      const Center(
+        child: CircularProgressIndicator(),
+      )
+     :
+      SingleChildScrollView(
+          controller: widget.scrollController,
+          child: Column(
+            children: [
+              ...widget.movieItemCard,
+              const CircularProgressIndicator(),
+            ],
+          )
+      );
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
-        child: FutureBuilder<List<MovieItemCard>>(
-          future: getMovieItemListWidget(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const CircularProgressIndicator(); // Display a loading indicator while fetching data
-            } else if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            } else if (snapshot.hasData) {
-              return SingleChildScrollView(
-                child: Column(
-                  children: snapshot.data!,
-                ),
-              );
-            } else {
-              return const Text('No data available');
-            }
-          }
-        ),
+        child: widgets,
       ),
     );
   }
 
   Future<List<MovieItemCard>> getMovieItemListWidget() async {
-    List<MovieModel> movies = await MovieApi().getMovieList();
-
-    List<MovieItemCard> movieItemCard = [];
+    List<MovieModel> movies = await MovieApi().getMovieList(widget.pageNo);
     for(var movie in movies) {
-      movieItemCard.add(
+      widget.movieItemCard.add(
         MovieItemCard(movieModel: movie)
       );
     }
+    setState(() {});
 
-    return movieItemCard;
+    return widget.movieItemCard;
   }
 }

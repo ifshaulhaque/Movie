@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
       routes: {
         Routes.SPLASH_SCREEN: (context) => SplashScreen(),
         Routes.LOGIN_SCREEN: (context) => const LoginScreen(),
-        Routes.MOVIE_LIST_SCREEN: (context) => const MovieListScreen(),
+        Routes.MOVIE_LIST_SCREEN: (context) => MovieListScreen(),
       },
       initialRoute: Routes.SPLASH_SCREEN,
     );

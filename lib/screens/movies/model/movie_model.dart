@@ -17,7 +17,7 @@ class MovieModel {
       posterUrl: "https://image.tmdb.org/t/p/w500${movie['poster_path']}",
       title: movie['title'],
       language: movie['original_language'],
-      rating: movie['vote_average'],
+      rating: movie['vote_average'] * 1.0,
       overview: movie['overview'],
     );
   }
