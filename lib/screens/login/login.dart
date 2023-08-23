@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:movie/component/edit_text.dart';
+import 'package:movie/resources/string.dart';
 import 'package:movie/routes/routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -15,41 +15,19 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool isExistingUser = false;
-  String? emailId;
-  String? password;
-  String btnText = 'Login';
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  String btnText = StringResources.login;
   late final SharedPreferences prefs;
+  final _formKey = GlobalKey<FormState>();
 
   void initializeSharedPreference() async{
     prefs = await SharedPreferences.getInstance();
   }
 
-  void findUser() {
-    String? emailId = prefs.getString(LoginScreen.LOGIN_ID);
-    setState(() {
-      isExistingUser = this.emailId != null && this.emailId == emailId;
-      if (isExistingUser) {
-        btnText = 'Login';
-      } else {
-        btnText = 'Register';
-      }
-    });
-  }
-
-  void loginRegisterBtnClicked() {
-    if (emailId != null && password != null) {
-      if (isExistingUser) {
-        String? emailId = prefs.getString(LoginScreen.LOGIN_ID);
-        String? password = prefs.getString(LoginScreen.LOGIN_PASSWORD);
-        if (this.emailId == emailId && this.password == password) {
-          prefs.setBool(LoginScreen.IS_LOGGED_IN, true);
-          Navigator.pushReplacementNamed(context, Routes.MOVIE_LIST_SCREEN);
-        }
-      } else {
-        prefs.setString(LoginScreen.LOGIN_ID, emailId!);
-        prefs.setString(LoginScreen.LOGIN_PASSWORD, password!);
-      }
-    }
+  void login() {
+    prefs.setBool(LoginScreen.IS_LOGGED_IN, true);
+    Navigator.pushReplacementNamed(context, Routes.MOVIE_LIST_SCREEN);
   }
 
   @override
@@ -59,45 +37,69 @@ class _LoginScreenState extends State<LoginScreen> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              EditText(
-                  hintText: 'Email Id',
-                  onChange: (value, errorCallback) {
-                    if (!isEmailValid(value)) {
-                      errorCallback("invalid email id");
-                      emailId = null;
-                    } else {
-                      emailId = value;
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                TextFormField(
+                  controller: emailController,
+                  decoration: const InputDecoration(
+                    labelText: StringResources.emailId,
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (String? value) {
+                    return isEmailValid(value!) ? null : StringResources.invalidEmail;
+                  },
+                  onChanged: (String? value) {
+                    if (isEmailValid(value!)) {
+                      if (value == prefs.get(LoginScreen.LOGIN_ID)) {
+                        btnText = StringResources.login;
+                      } else {
+                        btnText = StringResources.register;
+                      }
+                      setState(() {});
                     }
-                    findUser();
-                  }),
-              const SizedBox(
-                height: 16,
-              ),
-              EditText(
-                  hintText: 'Password',
-                  obsecureText: true,
-                  onChange: (value, errorCallback) {
-                    if (value.length < 6) {
-                      errorCallback("Minimum 6 digit required");
-                      password = null;
-                    } else {
-                      password = value;
-                    }
-                  }),
-              const SizedBox(
-                height: 8,
-              ),
-              ElevatedButton(
-                onPressed: loginRegisterBtnClicked,
-                child: Text(
-                  btnText,
+                  },
                 ),
-              )
-            ],
+                const SizedBox(
+                  height: 20,
+                ),
+                TextFormField(
+                  controller: passwordController,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    labelText: StringResources.password,
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (String? value) {
+                    return value!.length >= 6 ? null : StringResources.invalidPassword;
+                  },
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      if (emailController.value.text == prefs.get(LoginScreen.LOGIN_ID)) {
+                        if (passwordController.value.text == prefs.getString(LoginScreen.LOGIN_PASSWORD)) {
+                          login();
+                        }
+                      } else {
+                        prefs.setString(LoginScreen.LOGIN_ID, emailController.value.text);
+                        prefs.setString(LoginScreen.LOGIN_PASSWORD, passwordController.value.text);
+                        login();
+                      }
+                    }
+                  },
+                  child: Text(
+                    btnText,
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),
