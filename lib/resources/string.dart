@@ -5,4 +5,5 @@ class StringResources {
   static const String register = "Register";
   static const String invalidEmail = "Invalid Email";
   static const String invalidPassword = "Minimum 6 digit needed";
+  static const String wrongPassword = "Password is Incorrect";
 }

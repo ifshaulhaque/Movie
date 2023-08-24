@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:movie/resources/string.dart';
 import 'package:movie/routes/routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -86,6 +87,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       if (emailController.value.text == prefs.get(LoginScreen.LOGIN_ID)) {
                         if (passwordController.value.text == prefs.getString(LoginScreen.LOGIN_PASSWORD)) {
                           login();
+                        } else {
+                          Fluttertoast.showToast(
+                            msg: StringResources.wrongPassword,
+                            backgroundColor: Colors.redAccent
+                          );
                         }
                       } else {
                         prefs.setString(LoginScreen.LOGIN_ID, emailController.value.text);
