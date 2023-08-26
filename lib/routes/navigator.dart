@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       routes: {
         Routes.SPLASH_SCREEN: (context) => SplashScreen(),
-        Routes.LOGIN_SCREEN: (context) => const LoginScreen(),
+        Routes.LOGIN_SCREEN: (context) => LoginScreen(),
         Routes.MOVIE_LIST_SCREEN: (context) => MovieListScreen(),
       },
       initialRoute: Routes.SPLASH_SCREEN,
